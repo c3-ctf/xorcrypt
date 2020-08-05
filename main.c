@@ -2,7 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-#define BUF_SIZE 1
+#define BUF_SIZE 1024
 
 int main(int argc, char** argv) {
   if (argc < 3) {
@@ -22,13 +22,14 @@ int main(int argc, char** argv) {
       fprintf(stderr, "Could not open file\n");
   }
 
-  unsigned char outbuf[BUF_SIZE] ;
+  unsigned char outbuf[BUF_SIZE];
   unsigned char keybuf[BUF_SIZE];
 
   while (!feof(files[0])) {
-    size_t n_read = fread(outbuf, BUF_SIZE, 1, files[0]);
+    size_t n_read = fread(outbuf, 1, BUF_SIZE, files[0]);
     for (size_t file_no = 1; file_no < n_files; ++file_no) {
-      for (size_t acc = 0; acc != n_read; acc += fread(keybuf + acc, BUF_SIZE - acc, 1, files[file_no]))
+      size_t acc = 0;
+      for (; acc != n_read; acc += fread(keybuf + acc, 1, n_read - acc, files[file_no]))
         rewind(files[file_no]);
       for (size_t i = 0; i < n_read; ++i)
         outbuf[i]^=keybuf[i];

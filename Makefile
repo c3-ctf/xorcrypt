@@ -3,3 +3,5 @@ xorcrypt: main.c
 install: xorcrypt
 	cp xorcrypt /usr/bin/xorcrypt
 	chown ${UID}:${UID} /usr/bin/xorcrypt
+clean:
+	rm xorcrypt
